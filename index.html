@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./images/favicon-32x32.png"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles/styles.css" />
+    <title>Frontend Mentor | Time tracking dashboard</title>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="first-card">
+        <div class="cards-report">
+          <img
+            class="jeremy-img"
+            src="images/image-jeremy.png"
+            alt="jeremy-image"
+          />
+          <div class="report">
+            <p class="report-paragraph">Report for</p>
+            <h2 class="jeremy-name">Jeremy Robson</h2>
+          </div>
+        </div>
+
+        <div class="firstcard-periods">
+          <button class="period-list period-active">Daily</button>
+          <button class="period-list">Weekly</button>
+          <button class="period-list">Monthly</button>
+        </div>
+      </div>
+
+      <div class="cards__wrapper" id="card-wrapper"></div>
+    </div>
+
+    <!-- <div class="attribution">
+    Challenge by <a href="https://www.frontendmentor.io?ref=challenge" target="_blank">Frontend Mentor</a>. 
+    Coded by <a href="#">OSIGWE FRANKLYN</a>.
+  </div> -->
+
+    <script>
+      const cardWrapper = document.getElementById("card-wrapper");
+      let currentTimeframe = "daily";
+      let data;
+
+      const uniqueCardStyles = [
+        "work",
+        "play",
+        "study",
+        "exercise",
+        "social",
+        "self",
+      ];
+
+      const render = (res) => {
+         cardWrapper.innerHTML = res.map((item, index) => {
+            return `<div class="card-item card-item--${uniqueCardStyles[index]}">
+         <div class="work">
+          <div class="row">
+            <div class="title">${item.title}</div>
+
+               <div class="dots">
+               <img
+      class="icon-ellipsis"
+                  src="./images/icon-ellipsis.svg"
+                 alt="icon-ellipsis"
+               />
+             </div>
+           </div>
+
+           <div class="row-2">
+             <div class="hrs">${item.timeframes[currentTimeframe].current}hrs</div>
+              <div class="description">Last Week - ${item.timeframes[currentTimeframe].previous}hrs</div>
+          </div>
+          </div>
+        </div>`;
+          })
+          .join("");
+      };
+
+      fetch("./data.json")
+        .then((res) => res.json())
+        .then((res) => {
+          data = res;
+        render(res);
+       });
+
+      const periodList = document.querySelectorAll(".period-list");
+
+      periodList.forEach((item) => {
+       item.addEventListener("click", (event) => {
+           for (const child of event.target.parentElement.children) {
+             child.classList.remove("period-active");
+         }
+
+          currentTimeframe = event.target.textContent.toLowerCase();
+          event.target.classList.add("period-active");
+        render(data);
+       });
+      });
+    </script>
+  </body>
+</html>
